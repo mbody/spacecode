@@ -8,13 +8,14 @@ import random
 
 
 
-game = Game(host="192.168.1.81", username="Mathurin", color=Color.getRandomColor())
+game = Game(host="localhost", username="Mathurin", color=Color.getRandomColor())
 
 me = game.currentPlayer
+me.x = 300
+me.y = 500
 
 def autoPilot():
     dt = time.time()*10 % 400 
-    dt = 150
     if(dt>300):
         me.goForward()
         me.turnLeft()    
@@ -36,8 +37,8 @@ def manualControl():
     me.rotation = math.sin(time.time())*180
 
 while True:
-    #autoPilot()
-    manualControl()
+    autoPilot()
+    #manualControl()
 
     if random.randint(0, 100) > 95:
         me.shoot()
