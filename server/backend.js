@@ -6,6 +6,13 @@ const { networkInterfaces } = require('os')
 const http = require('http')
 const server = http.createServer(app)
 const { Server } = require('socket.io')
+const { EnemyManager } = require('./classes/EnemyManager')
+const {
+  backEndPlayers,
+  backEndEnemies,
+  backEndProjectiles
+} = require('./classes/SharedModel')
+const { ProjectileManager } = require('./classes/ProjectileManager')
 const io = new Server(server, { pingInterval: 2000, pingTimeout: 5000 })
 
 const port = 3000
@@ -17,10 +24,6 @@ app.get('/', (req, res) => {
 })
 
 const displayers = {}
-
-const backEndPlayers = {}
-const backEndProjectiles = {}
-const backEndEnemies = {}
 
 const SPEED = 5
 const SPEED_ROTATION = 10
@@ -46,24 +49,7 @@ io.on('connection', (socket) => {
     player = backEndPlayers[socket.id]
     if (!player) return
 
-    projectileId++
-
-    const { x, y, rotation } = player
-    const angle = (rotation * Math.PI) / 180
-
-    const velocity = {
-      x: Math.sin(angle) * SPEED,
-      y: -Math.cos(angle) * SPEED
-    }
-
-    backEndProjectiles[projectileId] = {
-      x,
-      y,
-      velocity,
-      playerId: socket.id
-    }
-
-    //console.log(backEndProjectiles)
+    ProjectileManager.createNewProjectile(player)
   })
 
   socket.on('initDisplay', ({ width = 0, height = 0 }, callback) => {
@@ -75,6 +61,7 @@ io.on('connection', (socket) => {
     }
     // ///debug///////////////////////////////////////////////////////////////
     backEndPlayers[socket.id] = {
+      id: socket.id,
       x: 1024 * Math.random(),
       y: 576 * Math.random(),
       radius: RADIUS,
@@ -92,6 +79,7 @@ io.on('connection', (socket) => {
 
   socket.on('initGame', ({ username, color }) => {
     backEndPlayers[socket.id] = {
+      id: socket.id,
       x: 1024 * Math.random(),
       y: 576 * Math.random(),
       rotation: 0,
@@ -192,49 +180,15 @@ io.on('connection', (socket) => {
 // backend ticker
 setInterval(() => {
   // update projectile positions
-  for (const id in backEndProjectiles) {
-    backEndProjectiles[id].x += backEndProjectiles[id].velocity.x
-    backEndProjectiles[id].y += backEndProjectiles[id].velocity.y
+  ProjectileManager.updateProjectiles()
 
-    const PROJECTILE_RADIUS = 5
-    if (
-      backEndProjectiles[id].x - PROJECTILE_RADIUS >=
-        backEndPlayers[backEndProjectiles[id].playerId]?.canvas?.width ||
-      backEndProjectiles[id].x + PROJECTILE_RADIUS <= 0 ||
-      backEndProjectiles[id].y - PROJECTILE_RADIUS >=
-        backEndPlayers[backEndProjectiles[id].playerId]?.canvas?.height ||
-      backEndProjectiles[id].y + PROJECTILE_RADIUS <= 0
-    ) {
-      delete backEndProjectiles[id]
-      continue
-    }
-
-    for (const playerId in backEndPlayers) {
-      const backEndPlayer = backEndPlayers[playerId]
-
-      const DISTANCE = Math.hypot(
-        backEndProjectiles[id].x - backEndPlayer.x,
-        backEndProjectiles[id].y - backEndPlayer.y
-      )
-
-      // collision detection
-      if (
-        DISTANCE < PROJECTILE_RADIUS + backEndPlayer.radius &&
-        backEndProjectiles[id].playerId !== playerId
-      ) {
-        if (backEndPlayers[backEndProjectiles[id].playerId])
-          backEndPlayers[backEndProjectiles[id].playerId].score++
-
-        //console.log(backEndPlayers[backEndProjectiles[id].playerId])
-        delete backEndProjectiles[id]
-        delete backEndPlayers[playerId]
-        break
-      }
-    }
-  }
+  // update enemies with projectiles
+  EnemyManager.updateEnemies()
 
   io.emit('updateProjectiles', backEndProjectiles)
   io.emit('updatePlayers', backEndPlayers)
+  //console.log('updating ' + JSON.stringify(backEndEnemies))
+  io.emit('updateEnemies', backEndEnemies)
 }, 15)
 
 server.listen(port, '0.0.0.0', () => {

@@ -27,5 +27,5 @@ addEventListener('click', (event) => {
   //   })
   // )
 
-  console.log(frontEndProjectiles)
+  //console.log(frontEndProjectiles)
 })

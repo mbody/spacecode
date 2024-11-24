@@ -15,3 +15,10 @@ class Utils {
     return `hsl(${360 * Math.random()}, 100%, 50%)`
   }
 }
+
+// hack for back
+if (typeof window === 'undefined') {
+  module.exports = { SCREEN, Utils }
+} else {
+  module = {}
+}

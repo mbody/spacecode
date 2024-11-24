@@ -19,6 +19,8 @@ const y = canvas.height / 2
 
 const frontEndPlayers = {}
 const frontEndProjectiles = {}
+const frontEndEnemies = {}
+
 const background = new Background(SCREEN)
 
 socket.emit(
@@ -55,6 +57,26 @@ socket.on('updateProjectiles', (backEndProjectiles) => {
   for (const frontEndProjectileId in frontEndProjectiles) {
     if (!backEndProjectiles[frontEndProjectileId]) {
       delete frontEndProjectiles[frontEndProjectileId]
+    }
+  }
+})
+
+socket.on('updateEnemies', (backEndEnemies) => {
+  //console.log('updating enemies')
+  for (const id in backEndEnemies) {
+    const enemy = backEndEnemies[id]
+
+    if (!frontEndEnemies[id]) {
+      frontEndEnemies[id] = new Enemy(enemy)
+    } else {
+      frontEndEnemies[id].x = enemy.x
+      frontEndEnemies[id].y = enemy.y
+    }
+  }
+
+  for (const id in frontEndEnemies) {
+    if (!backEndEnemies[id]) {
+      delete frontEndEnemies[id]
     }
   }
 })
@@ -168,14 +190,12 @@ function animate() {
   }
 
   for (const id in frontEndProjectiles) {
-    const frontEndProjectile = frontEndProjectiles[id]
-    frontEndProjectile.draw()
+    frontEndProjectiles[id].draw()
   }
 
-  // for (let i = frontEndProjectiles.length - 1; i >= 0; i--) {
-  //   const frontEndProjectile = frontEndProjectiles[i]
-  //   frontEndProjectile.update()
-  // }
+  for (const id in frontEndEnemies) {
+    frontEndEnemies[id].draw()
+  }
 }
 
 animate()
