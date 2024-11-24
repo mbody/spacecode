@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        margin: 0;
+        background: #1b4075;
+        font-family: sans-serif;
+        font-size: 14px;
+        color: white;
+      }
+
+      input::placeholder {
+        color: #94a3b8;
+      }
+
+      canvas {
+        width: 1024px;
+        height: 576px;
+        /*background-image: url('/img/webb-dark.png');*/
+        background-image: url('/img/black.png');
+      }
+
+      #leaderboard {
+        position: absolute;
+        color: white;
+        padding: 8px;
+        user-select: none;
+        background: rgba(0, 0, 0, 0.5);
+      }
+      #leaderboardTitle {
+        margin-bottom: 8px;
+        font-weight: bolder;
+        font-size: 18px;
+      }
+      #serverUrl {
+        padding-top: 5;
+        color: #7b7b7b;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body style="display: flex; align-items: center; justify-content: center">
+    <div>
+      <div id="leaderboard">
+        <div id="leaderboardTitle">Leaderboard</div>
+        <div id="playerLabels"></div>
+      </div>
+      <canvas></canvas>
+      <div id="serverUrl">localhost</div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.2/gsap.min.js"
+      integrity="sha512-kVlGhj2qFy+KBCFuvjBJTGUMxbdqJKs4yK2jh0e0VPhWUPiPC87bzm4THmaaIee3Oj7j6sDpTTgm2EPPiESqBg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="./js/classes/Utils.js"></script>
+    <script src="./js/classes/Star.js"></script>
+    <script src="./js/classes/Background.js"></script>
+    <script src="./js/classes/Enemy.js"></script>
+    <script src="./js/classes/Player.js"></script>
+    <script src="./js/classes/Particle.js"></script>
+    <script src="./js/classes/Projectile.js"></script>
+    <script src="./js/frontend.js"></script>
+    <script src="./js/eventListeners.js"></script>
+  </body>
+</html>
