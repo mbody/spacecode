@@ -1,9 +1,15 @@
-const SCREEN = {
-  width: 1024,
-  height: 576
+const CONSTANTES = {
+  SCREEN: {
+    width: 1024,
+    height: 576
+  },
+  // PROJECTILES
+  PROJECTILE_RADIUS: 5,
+  PROJECTILE_SPEED: 5,
+  // PLAYER
+  PLAYER_SPEED: 5,
+  PLAYER_ROTATION_SPEED: 5,
+  PLAYER_RADIUS: 20
 }
 
-const PROJECTILE_RADIUS = 5
-const PROJECTILE_SPEED = 5
-
-module.exports = { SCREEN, PROJECTILE_RADIUS, PROJECTILE_SPEED }
+module.exports = CONSTANTES

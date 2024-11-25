@@ -13,6 +13,8 @@ const {
   backEndProjectiles
 } = require('./classes/SharedModel')
 const { ProjectileManager } = require('./classes/ProjectileManager')
+const { PlayerManager } = require('./classes/PlayerManager')
+const { Player } = require('./classes/Player')
 const io = new Server(server, { pingInterval: 2000, pingTimeout: 5000 })
 
 const port = 3000
@@ -60,17 +62,16 @@ io.on('connection', (socket) => {
       }
     }
     // ///debug///////////////////////////////////////////////////////////////
-    backEndPlayers[socket.id] = {
+
+    PlayerManager.createNewPlayer({
       id: socket.id,
-      x: 1024 * Math.random(),
-      y: 576 * Math.random(),
       radius: RADIUS,
       rotation: 45,
       color: `hsl(${360 * Math.random()}, 100%, 50%)`,
       sequenceNumber: 0,
       score: 0,
       username: 'Teacher'
-    }
+    })
 
     callback({
       ip: getIpAddress()
@@ -78,17 +79,12 @@ io.on('connection', (socket) => {
   })
 
   socket.on('initGame', ({ username, color }) => {
-    backEndPlayers[socket.id] = {
+    PlayerManager.createNewPlayer({
       id: socket.id,
-      x: 1024 * Math.random(),
-      y: 576 * Math.random(),
-      rotation: 0,
       radius: RADIUS,
       color,
-      sequenceNumber: 0,
-      score: 0,
       username
-    }
+    })
   })
 
   socket.on('disconnect', (reason) => {
@@ -98,22 +94,25 @@ io.on('connection', (socket) => {
   })
 
   socket.on('updatePlayerX', (x) => {
-    const backEndPlayer = backEndPlayers[socket.id]
-    if (backEndPlayer) {
-      backEndPlayer.x = x
-    }
+    PlayerManager.updateProperty({
+      playerId: socket.id,
+      attribute: 'x',
+      value: x
+    })
   })
   socket.on('updatePlayerY', (y) => {
-    const backEndPlayer = backEndPlayers[socket.id]
-    if (backEndPlayer) {
-      backEndPlayer.y = y
-    }
+    PlayerManager.updateProperty({
+      playerId: socket.id,
+      attribute: 'y',
+      value: y
+    })
   })
   socket.on('updatePlayerRotation', (rotation) => {
-    const backEndPlayer = backEndPlayers[socket.id]
-    if (backEndPlayer) {
-      backEndPlayer.rotation = rotation
-    }
+    PlayerManager.updateProperty({
+      playerId: socket.id,
+      attribute: 'rotation',
+      value: rotation
+    })
   })
 
   socket.on('keydown', ({ keycode, sequenceNumber }) => {
@@ -124,56 +123,25 @@ io.on('connection', (socket) => {
     backEndPlayer.sequenceNumber = sequenceNumber
     switch (keycode) {
       case 'ArrowUp':
-        // move forward
-        backEndPlayer.x += Math.sin(degToRad(backEndPlayer.rotation)) * SPEED
-        backEndPlayer.y -= Math.cos(degToRad(backEndPlayer.rotation)) * SPEED
+        backEndPlayer.moveForward()
         break
 
       case 'ArrowLeft':
         // turn anti-clockwise
-        backEndPlayer.rotation -= SPEED_ROTATION
+        backEndPlayer.turnLeft()
         break
 
       case 'ArrowDown':
         // move backward
-        backEndPlayer.x -= Math.sin(degToRad(backEndPlayer.rotation)) * SPEED
-        backEndPlayer.y += Math.cos(degToRad(backEndPlayer.rotation)) * SPEED
+        backEndPlayer.moveBackward()
         break
 
       case 'ArrowRight':
         // turn clockwise
-        backEndPlayer.rotation += SPEED_ROTATION
+        backEndPlayer.turnRight()
         break
     }
-
-    /*
-    if (backEndPlayer.x > SCREEN.width) {
-      backEndPlayer.x -= SCREEN.width
-    } else if (backEndPlayer.x < 0) {
-      backEndPlayer.x += SCREEN.width
-    }
-    if (backEndPlayer.y > SCREEN.height) {
-      backEndPlayer.y -= SCREEN.height
-    } else if (backEndPlayer.y < 0) {
-      backEndPlayer.y += SCREEN.height
-    }
-
-    */
-
-    const playerSides = {
-      left: backEndPlayer.x - backEndPlayer.radius,
-      right: backEndPlayer.x + backEndPlayer.radius,
-      top: backEndPlayer.y - backEndPlayer.radius,
-      bottom: backEndPlayer.y + backEndPlayer.radius
-    }
-
-    if (playerSides.left < 0) backEndPlayer.x = backEndPlayer.radius
-
-    if (playerSides.right > 1024) backEndPlayer.x = 1024 - backEndPlayer.radius
-
-    if (playerSides.top < 0) backEndPlayer.y = backEndPlayer.radius
-
-    if (playerSides.bottom > 576) backEndPlayer.y = 576 - backEndPlayer.radius
+    backEndPlayer.checkConstraints()
   })
 })
 

@@ -1,7 +1,13 @@
 const { SCREEN } = require('./Constants')
 
 class GameObject {
-  constructor({ x, y, radius, color, velocity }) {
+  constructor({
+    x = SCREEN.width * Math.random(),
+    y = SCREEN.height * Math.random(),
+    radius,
+    color,
+    velocity
+  }) {
     this.x = x
     this.y = y
     this.radius = radius
