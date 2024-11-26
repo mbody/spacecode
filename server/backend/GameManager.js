@@ -42,7 +42,7 @@ class GameManager {
 
   onShoot = (playerId) => {
     const player = backEndPlayers[playerId]
-    if (!player) return
+    if (!player || !player.alive) return
 
     ProjectileManager.createNewProjectile(player)
     // retropus from firing
@@ -52,7 +52,7 @@ class GameManager {
   onKeydown = (playerId, { keycode, sequenceNumber }) => {
     const backEndPlayer = backEndPlayers[playerId]
 
-    if (!backEndPlayer) return
+    if (!backEndPlayer || !backEndPlayer.alive) return
 
     backEndPlayer.sequenceNumber = sequenceNumber
     switch (keycode) {
@@ -79,6 +79,9 @@ class GameManager {
   }
 
   onUpdatePlayerProperty = (playerId, property, value) => {
+    const player = backEndPlayers[playerId]
+    if (!player || !player.alive) return
+
     PlayerManager.updateProperty({
       playerId,
       property,
@@ -116,7 +119,7 @@ class GameManager {
       color: `hsl(${360 * Math.random()}, 100%, 50%)`,
       sequenceNumber: 0,
       score: 0,
-      username: 'Teacher'
+      username: 'Me'
     })
 
     callback({
@@ -126,17 +129,30 @@ class GameManager {
 
   ////
 
-  loop() {
+  loop = () => {
     // update projectile positions
     ProjectileManager.updateProjectiles()
 
     // update enemies with projectiles
     EnemyManager.updateEnemies()
 
+    // update players
+    const hasPlayerAlive = PlayerManager.updatePlayers()
+    if (!hasPlayerAlive) {
+      this.gameOver()
+    }
+
     NetworkManager.io.emit('updateProjectiles', backEndProjectiles)
     NetworkManager.io.emit('updatePlayers', backEndPlayers)
     //console.log('updating ' + JSON.stringify(backEndEnemies))
     NetworkManager.io.emit('updateEnemies', backEndEnemies)
+  }
+
+  gameOver() {
+    const winner = PlayerManager.getWinner()
+    NetworkManager.io.emit('gameOver', winner)
+    EnemyManager.resetAllEnemies()
+    PlayerManager.resetAllPlayers()
   }
 }
 

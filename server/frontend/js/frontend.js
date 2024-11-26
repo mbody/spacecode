@@ -20,6 +20,7 @@ const y = canvas.height / 2
 const frontEndPlayers = {}
 const frontEndProjectiles = {}
 const frontEndEnemies = {}
+const particles = []
 
 const background = new Background(SCREEN)
 
@@ -86,18 +87,14 @@ socket.on('updatePlayers', (backEndPlayers) => {
     const backEndPlayer = backEndPlayers[id]
 
     if (!frontEndPlayers[id]) {
-      frontEndPlayers[id] = new Player({
-        x: backEndPlayer.x,
-        y: backEndPlayer.y,
-        rotation: backEndPlayer.rotation,
-        color: backEndPlayer.color,
-        username: backEndPlayer.username
-      })
+      frontEndPlayers[id] = new Player(backEndPlayer)
 
       document.querySelector(
         '#playerLabels'
       ).innerHTML += `<div data-id="${id}" data-score="${backEndPlayer.score}">${backEndPlayer.username}: ${backEndPlayer.score}</div>`
     } else {
+      frontEndPlayers[id].updateFromBackend(backEndPlayer)
+
       document.querySelector(
         `div[data-id="${id}"]`
       ).innerHTML = `${backEndPlayer.username}: ${backEndPlayer.score}`
@@ -133,7 +130,13 @@ socket.on('updatePlayers', (backEndPlayers) => {
         rotation: backEndPlayer.rotation
       }
 
-      if (id === socket.id) {
+      if (!backEndPlayer.alive) {
+        frontEndPlayers[id].x = backEndPlayer.x
+        frontEndPlayers[id].y = backEndPlayer.y
+        frontEndPlayers[id].rotation = backEndPlayer.rotation
+      }
+
+      if (id === socket.id && backEndPlayer.alive) {
         const lastBackendInputIndex = playerInputs.findIndex((input) => {
           return backEndPlayer.sequenceNumber === input.sequenceNumber
         })
@@ -166,6 +169,38 @@ socket.on('updatePlayers', (backEndPlayers) => {
 
 socket.on('enemyKilled', ({ enemy, killedBy }) => {
   Enemy.enemyKilled()
+  // create explosion
+  for (let i = 0; i < enemy.radius * 2; i++) {
+    particles.push(
+      new Particle(enemy.x, enemy.y, Math.random() * 2, killedBy.color, {
+        x: (Math.random() - 0.5) * (Math.random() * 6),
+        y: (Math.random() - 0.5) * (Math.random() * 6)
+      })
+    )
+  }
+})
+
+socket.on('playerKilled', ({ player }) => {
+  Player.playerKilled()
+  // create explosion
+  for (let i = 0; i < player.radius * 2; i++) {
+    particles.push(
+      new Particle(player.x, player.y, Math.random() * 2, player.color, {
+        x: (Math.random() - 0.5) * (Math.random() * 6),
+        y: (Math.random() - 0.5) * (Math.random() * 6)
+      })
+    )
+  }
+})
+
+socket.on('gameOver', (winner) => {
+  const gameoverBox = document.querySelector('#gameover')
+  gameoverBox.innerHTML = `GAME OVER !<br>Winner is ${winner.username} !`
+  gameoverBox.style.display = 'block'
+
+  setTimeout(() => {
+    gameoverBox.style.display = 'none'
+  }, 5000)
 })
 
 let animationId
@@ -200,6 +235,14 @@ function animate() {
   for (const id in frontEndEnemies) {
     frontEndEnemies[id].draw()
   }
+
+  particles.forEach((particle, index) => {
+    if (particle.alpha <= 0) {
+      particles.splice(index, 1)
+    } else {
+      particle.update()
+    }
+  })
 }
 
 animate()
@@ -228,28 +271,28 @@ let sequenceNumber = 0
 setInterval(() => {
   if (keys.w.pressed) {
     sequenceNumber++
-    playerInputs.push({ sequenceNumber, dx: 0, dy: -SPEED })
+    //playerInputs.push({ sequenceNumber, dx: 0, dy: -SPEED })
     // frontEndPlayers[socket.id].y -= SPEED
     socket.emit('keydown', { keycode: 'ArrowUp', sequenceNumber })
   }
 
   if (keys.a.pressed) {
     sequenceNumber++
-    playerInputs.push({ sequenceNumber, dx: -SPEED, dy: 0 })
+    //playerInputs.push({ sequenceNumber, dx: -SPEED, dy: 0 })
     // frontEndPlayers[socket.id].x -= SPEED
     socket.emit('keydown', { keycode: 'ArrowLeft', sequenceNumber })
   }
 
   if (keys.s.pressed) {
     sequenceNumber++
-    playerInputs.push({ sequenceNumber, dx: 0, dy: SPEED })
+    //playerInputs.push({ sequenceNumber, dx: 0, dy: SPEED })
     // frontEndPlayers[socket.id].y += SPEED
     socket.emit('keydown', { keycode: 'ArrowDown', sequenceNumber })
   }
 
   if (keys.d.pressed) {
     sequenceNumber++
-    playerInputs.push({ sequenceNumber, dx: SPEED, dy: 0 })
+    //playerInputs.push({ sequenceNumber, dx: SPEED, dy: 0 })
     // frontEndPlayers[socket.id].x += SPEED
     socket.emit('keydown', { keycode: 'ArrowRight', sequenceNumber })
   }

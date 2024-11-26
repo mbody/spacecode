@@ -3,7 +3,9 @@ const {
   SCREEN,
   PLAYER_SPEED,
   PLAYER_ROTATION_SPEED,
-  PLAYER_RADIUS
+  PLAYER_RADIUS,
+  PLAYER_RESPAWN_DELAY,
+  PLAYER_INVICIBLE_DELAY
 } = require('./Constants')
 const { GameObject } = require('./GameObject')
 
@@ -22,6 +24,8 @@ class Player extends GameObject {
     this.rotation = rotation
     this.username = username
     this.score = score
+    this.alive = true
+    this.invicible = false
   }
 
   moveForward() {
@@ -66,6 +70,25 @@ class Player extends GameObject {
     }
 
     */
+  }
+
+  die() {
+    this.alive = false
+    this.x = SCREEN.width * Math.random()
+    this.y = SCREEN.height * Math.random()
+    setTimeout(this.respawn, PLAYER_RESPAWN_DELAY)
+  }
+
+  respawn = () => {
+    this.alive = true
+    this.invicible = true
+    setTimeout(() => {
+      this.invicible = false
+    }, PLAYER_INVICIBLE_DELAY)
+  }
+
+  reset() {
+    this.score = 0
   }
 }
 

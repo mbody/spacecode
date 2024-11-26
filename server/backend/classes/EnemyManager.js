@@ -6,6 +6,7 @@ const {
   backEndProjectiles
 } = require('./SharedModel')
 const NetworkManager = require('./NetworkManager')
+const { ENEMY_RADIUS } = require('./Constants')
 
 class EnemyManager {
   static currentLevel = 1
@@ -54,7 +55,7 @@ class EnemyManager {
   }
 
   static createNewEnemy() {
-    const radius = Math.random() * (20 - 10) + 10
+    const radius = ENEMY_RADIUS
 
     let x
     let y
@@ -83,6 +84,14 @@ class EnemyManager {
       color,
       velocity
     })
+  }
+
+  static resetAllEnemies() {
+    this.currentLevel = 1
+    this.enemyId = 0
+    for (const id in backEndEnemies) {
+      delete backEndEnemies[id]
+    }
   }
 }
 

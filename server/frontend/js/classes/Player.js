@@ -2,24 +2,42 @@ class Player {
   HEIGHT = 30
   WIDTH = 8
 
-  constructor({ x, y, rotation, color, username }) {
+  constructor({ x, y, rotation, color, username, invicible, alive }) {
     this.x = x
     this.y = y
     this.rotation = rotation
     this.color = color
+    this.originalColor = color
     this.username = username
+    this.alive = alive
+    this.invicible = invicible
+  }
+
+  updateFromBackend({ alive, invicible }) {
+    this.alive = alive
+    if (!invicible && this.invicible) {
+      this.color = this.originalColor
+    }
+    this.invicible = invicible
   }
 
   draw() {
-    c.font = '12px sans-serif'
-    c.fillStyle = 'white'
-    c.textAlign = 'center'
-    c.fillText(this.username, this.x, this.y + 35)
-    c.save()
-    c.shadowColor = this.color
-    c.shadowBlur = 20
-    this.drawBody()
-    c.restore()
+    if (this.alive) {
+      if (this.invicible) {
+        const blink = Math.floor(Date.now() / 500.0) % 2 == 0
+        this.color = blink ? 'white' : this.originalColor
+      }
+
+      c.font = '12px sans-serif'
+      c.fillStyle = 'white'
+      c.textAlign = 'center'
+      c.fillText(this.username, this.x, this.y + 35)
+      c.save()
+      c.shadowColor = this.color
+      c.shadowBlur = this.invicible ? 40 : 20
+      this.drawBody()
+      c.restore()
+    }
   }
 
   drawBody() {
@@ -66,13 +84,13 @@ class Player {
     c.strokeStyle = '#000000'
     c.lineWIDTH = 1
     c.stroke()
-    this.draw_spaceship_foot(this.WIDTH)
-    this.draw_spaceship_foot(-this.WIDTH)
+    this.drawFoot(this.WIDTH)
+    this.drawFoot(-this.WIDTH)
     this.drawWindow()
     c.restore()
   }
 
-  draw_spaceship_foot(offsetWIDTH) {
+  drawFoot(offsetWIDTH) {
     c.beginPath()
     c.moveTo(offsetWIDTH * 0.85, 0)
     c.quadraticCurveTo(
@@ -109,5 +127,12 @@ class Player {
     c.closePath()
     c.fill()
     c.stroke()
+  }
+
+  static playerKilled() {
+    if (!this.dieSound) {
+      this.dieSound = GameObject.getMediaById('playerDie')
+    }
+    this.dieSound.play()
   }
 }
