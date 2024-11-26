@@ -1,5 +1,8 @@
-class Enemy {
+class Enemy extends GameObject {
+  static dieSound
+
   constructor({ x, y, radius, color, velocity }) {
+    super()
     this.x = x
     this.y = y
     this.radius = radius
@@ -8,9 +11,20 @@ class Enemy {
   }
 
   draw() {
+    if (!this.sprite) {
+      this.sprite = GameObject.getMediaById('enemy')
+    }
     c.beginPath()
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-    c.fillStyle = this.color
+    //c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+    //c.fillStyle = this.color
+    c.drawImage(this.sprite, this.x, this.y)
     c.fill()
+  }
+
+  static enemyKilled() {
+    if (!this.dieSound) {
+      this.dieSound = GameObject.getMediaById('enemyDie')
+    }
+    this.dieSound.play()
   }
 }

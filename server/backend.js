@@ -1,11 +1,3 @@
-const express = require('express')
-const app = express()
-const { networkInterfaces } = require('os')
-
-// socket.io setup
-const http = require('http')
-const server = http.createServer(app)
-const { Server } = require('socket.io')
 const { EnemyManager } = require('./classes/EnemyManager')
 const {
   backEndPlayers,
@@ -15,15 +7,7 @@ const {
 const { ProjectileManager } = require('./classes/ProjectileManager')
 const { PlayerManager } = require('./classes/PlayerManager')
 const { Player } = require('./classes/Player')
-const io = new Server(server, { pingInterval: 2000, pingTimeout: 5000 })
-
-const port = 3000
-
-app.use(express.static('public'))
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
-})
+const NetworkManager = require('./classes/NetworkManager')
 
 const displayers = {}
 
@@ -38,9 +22,9 @@ const SCREEN = {
   height: 576
 }
 
-function degToRad(deg) {
-  return deg * (Math.PI / 180)
-}
+NetworkManager.startApp()
+
+const io = NetworkManager.io
 
 io.on('connection', (socket) => {
   console.log('a user connected')
@@ -74,7 +58,7 @@ io.on('connection', (socket) => {
     })
 
     callback({
-      ip: getIpAddress()
+      ip: NetworkManager.getIpAddress()
     })
   })
 
@@ -158,33 +142,3 @@ setInterval(() => {
   //console.log('updating ' + JSON.stringify(backEndEnemies))
   io.emit('updateEnemies', backEndEnemies)
 }, 15)
-
-server.listen(port, '0.0.0.0', () => {
-  console.log(
-    `Spacecode server listening on port ${port}... \nOpen http://localhost:3000 to display the game`
-  )
-})
-
-function getIpAddress() {
-  const nets = networkInterfaces()
-  const results = {}
-  let firstIp = undefined
-  for (const name of Object.keys(nets)) {
-    for (const net of nets[name]) {
-      // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
-      // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
-      const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
-      if (net.family === familyV4Value && !net.internal) {
-        if (!results[name]) {
-          results[name] = []
-        }
-        results[name].push(net.address)
-        if (!firstIp) {
-          firstIp = net.address
-        }
-      }
-    }
-  }
-
-  return firstIp
-}

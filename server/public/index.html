@@ -40,6 +40,9 @@
         color: #7b7b7b;
         text-align: center;
       }
+      .hidden {
+        display: none;
+      }
     </style>
   </head>
   <body style="display: flex; align-items: center; justify-content: center">
@@ -60,6 +63,7 @@
     ></script>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script src="./js/classes/Utils.js"></script>
+    <script src="./js/classes/GameObject.js"></script>
     <script src="./js/classes/Star.js"></script>
     <script src="./js/classes/Background.js"></script>
     <script src="./js/classes/Enemy.js"></script>
@@ -68,5 +72,9 @@
     <script src="./js/classes/Projectile.js"></script>
     <script src="./js/frontend.js"></script>
     <script src="./js/eventListeners.js"></script>
+    <div class="hidden">
+      <img id="enemy" src="./img/enemy.svg" />
+      <audio id="enemyDie" src="./sounds/enemyDie.mp3" />
+    </div>
   </body>
 </html>

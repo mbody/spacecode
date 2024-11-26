@@ -164,6 +164,10 @@ socket.on('updatePlayers', (backEndPlayers) => {
   }
 })
 
+socket.on('enemyKilled', ({ enemy, killedBy }) => {
+  Enemy.enemyKilled()
+})
+
 let animationId
 function animate() {
   animationId = requestAnimationFrame(animate)

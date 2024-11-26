@@ -5,6 +5,7 @@ const {
   backEndPlayers,
   backEndProjectiles
 } = require('./SharedModel')
+const NetworkManager = require('./NetworkManager')
 
 class EnemyManager {
   static currentLevel = 1
@@ -28,16 +29,28 @@ class EnemyManager {
       for (const projectileId in backEndProjectiles) {
         const projectile = backEndProjectiles[projectileId]
         if (enemy.isHitBy(projectile)) {
-          if (backEndPlayers[projectile.playerId]) {
-            backEndPlayers[projectile.playerId].score++
-          }
-          delete backEndProjectiles[projectileId]
-          delete backEndEnemies[enemyId]
-          this.currentLevel += 0.1
+          // enemy die !
+          EnemyManager.onEnemyDie(projectile, projectileId, enemyId)
           break
         }
       }
     }
+  }
+
+  static onEnemyDie(projectile, projectileId, enemyId) {
+    const enemyKiller = backEndPlayers[projectile.playerId]
+    const enemy = backEndEnemies[enemyId]
+
+    if (enemyKiller) {
+      enemyKiller.score++
+    }
+
+    NetworkManager.io.emit('enemyKilled', { enemy, killedBy: enemyKiller })
+
+    this.currentLevel += 0.1
+
+    delete backEndProjectiles[projectileId]
+    delete backEndEnemies[enemyId]
   }
 
   static createNewEnemy() {
