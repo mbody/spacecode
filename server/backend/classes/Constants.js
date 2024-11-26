@@ -9,7 +9,9 @@ const CONSTANTES = {
   // PLAYER
   PLAYER_SPEED: 5,
   PLAYER_ROTATION_SPEED: 5,
-  PLAYER_RADIUS: 10
+  PLAYER_RADIUS: 10,
+  // ENEMY
+  ENEMY_RADIUS: 20 // has to match enemy.svg file size /2 !
 }
 
 module.exports = CONSTANTES

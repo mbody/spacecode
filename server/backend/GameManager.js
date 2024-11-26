@@ -45,6 +45,8 @@ class GameManager {
     if (!player) return
 
     ProjectileManager.createNewProjectile(player)
+    // retropus from firing
+    player.moveBackward()
   }
 
   onKeydown = (playerId, { keycode, sequenceNumber }) => {
