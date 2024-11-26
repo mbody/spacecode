@@ -7,7 +7,7 @@ class NetworkManager {
 
   static startApp() {
     // App setup
-    app.use(express.static('public'))
+    app.use(express.static('frontend'))
     app.get('/', (req, res) => {
       res.sendFile(__dirname + '/index.html')
     })
@@ -52,6 +52,13 @@ class NetworkManager {
     }
 
     return firstIp
+  }
+
+  static on(message, callback) {
+    this.io.on(message, callback)
+  }
+  static emit(message, data) {
+    this.io.emit(message, data)
   }
 }
 

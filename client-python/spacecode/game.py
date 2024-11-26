@@ -15,7 +15,7 @@ class Game:
         self.currentPlayer = Player()
 
         sio.connect(url)
-        sio.emit("initGame", {"username": username, "color": color})
+        sio.emit("newPlayer", {"username": username, "color": color})
 
     def update(self):
         time.sleep(1/20)

@@ -1,4 +1,4 @@
-const { Utils } = require('../public/js/classes/Utils')
+const { Utils } = require('../../frontend/js/classes/Utils')
 const {
   SCREEN,
   PLAYER_SPEED,

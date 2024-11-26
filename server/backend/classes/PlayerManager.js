@@ -1,4 +1,4 @@
-const { SCREEN } = require('../public/js/classes/Utils')
+const { SCREEN } = require('../../frontend/js/classes/Utils')
 const { Player } = require('./Player')
 const {
   backEndEnemies,

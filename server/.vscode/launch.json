@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Lancer le programme",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/backend"
+      "program": "${workspaceFolder}/app"
     }
   ]
 }
