@@ -40,7 +40,6 @@ while True:
     autoPilot()
     #manualControl()
 
-    if random.randint(0, 100) > 95:
-        me.shoot()
+    me.shoot()
     
     game.update()

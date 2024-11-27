@@ -1,12 +1,15 @@
 import json
 from .network import sio
 
+
+
 class Player:
     def __init__(self, x=0, y=0, rotation=0):
         self.__x = x
         self.__y = y
         self.__rotation = rotation
-
+        self.lastShootTimestamp = 0
+    
     def shoot(self):
         sio.emit("shoot")
 

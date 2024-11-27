@@ -5,11 +5,15 @@ const {
   PLAYER_ROTATION_SPEED,
   PLAYER_RADIUS,
   PLAYER_RESPAWN_DELAY,
-  PLAYER_INVICIBLE_DELAY
+  PLAYER_INVICIBLE_DELAY,
+  SHOOT_INTERVAL
 } = require('./Constants')
 const { GameObject } = require('./GameObject')
+const { ProjectileManager } = require('./ProjectileManager')
 
 class Player extends GameObject {
+  lastShootTimestamp = 0
+
   constructor({
     id,
     username,
@@ -89,6 +93,18 @@ class Player extends GameObject {
 
   reset() {
     this.score = 0
+  }
+
+  canShoot() {
+    return this.alive && Date.now() - this.lastShootTimestamp > SHOOT_INTERVAL
+  }
+
+  shoot() {
+    if (!this.canShoot()) return
+    ProjectileManager.createNewProjectile(this)
+    // retropus from firing
+    // this.moveBackward()
+    this.lastShootTimestamp = Date.now()
   }
 }
 

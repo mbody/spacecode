@@ -42,11 +42,9 @@ class GameManager {
 
   onShoot = (playerId) => {
     const player = backEndPlayers[playerId]
-    if (!player || !player.alive) return
+    if (!player) return
 
-    ProjectileManager.createNewProjectile(player)
-    // retropus from firing
-    player.moveBackward()
+    player.shoot()
   }
 
   onKeydown = (playerId, { keycode, sequenceNumber }) => {

@@ -12,6 +12,7 @@ const CONSTANTES = {
   PLAYER_RADIUS: 20,
   PLAYER_RESPAWN_DELAY: 3000,
   PLAYER_INVICIBLE_DELAY: 5000,
+  SHOOT_INTERVAL: 500,
   // ENEMY
   ENEMY_RADIUS: 20 // has to match enemy.svg file size /2 !
 }

@@ -17,5 +17,10 @@ class Game:
         sio.connect(url)
         sio.emit("newPlayer", {"username": username, "color": color})
 
+        @sio.on('updateEnemies')
+        def onUpdateEnemies(enemies):
+            self.enemies = enemies
+
     def update(self):
         time.sleep(1/20)
+
