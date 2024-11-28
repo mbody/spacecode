@@ -6,7 +6,7 @@ const {
   backEndProjectiles
 } = require('./SharedModel')
 const NetworkManager = require('./NetworkManager')
-const { ENEMY_RADIUS } = require('./Constants')
+const { ENEMY_RADIUS, LEVEL_PROGRESS_PER_KILL } = require('./Constants')
 
 class EnemyManager {
   static currentLevel = 1
@@ -48,7 +48,7 @@ class EnemyManager {
 
     NetworkManager.io.emit('enemyKilled', { enemy, killedBy: enemyKiller })
 
-    this.currentLevel += 0.1
+    this.currentLevel += LEVEL_PROGRESS_PER_KILL
 
     delete backEndProjectiles[projectileId]
     delete backEndEnemies[enemyId]

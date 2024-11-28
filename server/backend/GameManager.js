@@ -8,6 +8,7 @@ const { ProjectileManager } = require('./classes/ProjectileManager')
 const { PlayerManager } = require('./classes/PlayerManager')
 const { Player } = require('./classes/Player')
 const NetworkManager = require('./classes/NetworkManager')
+const { SCREEN } = require('./classes/Constants')
 
 class GameManager {
   displayers = {}
@@ -19,22 +20,23 @@ class GameManager {
   }
 
   onConnection = (socket) => {
-    console.log('New client connected !')
-    socket.on('initDisplay', (data, callback) =>
-      this.onInitDisplay(socket.id, data, callback)
-    )
-    socket.on('newPlayer', (data) => this.onNewPlayer(socket.id, data))
+    NetworkManager.socketId = socket.id
+    console.log(`New client connected ${socket.id}!`)
+    socket.on('initDisplay', (data, callback) => {
+      this.onInitDisplay(socket.id, data)
+      this.initGameCallback(callback)
+    })
+    socket.on('newPlayer', (data, callback) => {
+      this.onNewPlayer(socket.id, data)
+      this.initGameCallback(callback)
+    })
     socket.on('disconnect', (data) => this.onDisconnect(socket.id, data))
-    socket.on('updatePlayerX', (data) =>
-      this.onUpdatePlayerProperty(socket.id, 'x', data)
+    socket.on('updatePlayerProperty', ({ key, value }, callback) =>
+      this.onUpdatePlayerProperty(socket.id, key, value, callback)
     )
-    socket.on('updatePlayerY', (data) =>
-      this.onUpdatePlayerProperty(socket.id, 'y', data)
+    socket.on('keydown', (data, callback) =>
+      this.onKeydown(socket.id, data, callback)
     )
-    socket.on('updatePlayerRotation', (data) =>
-      this.onUpdatePlayerProperty(socket.id, 'rotation', data)
-    )
-    socket.on('keydown', (data) => this.onKeydown(socket.id, data))
     socket.on('shoot', (data) => this.onShoot(socket.id, data))
 
     NetworkManager.emit('updatePlayers', backEndPlayers)
@@ -47,7 +49,7 @@ class GameManager {
     player.shoot()
   }
 
-  onKeydown = (playerId, { keycode, sequenceNumber }) => {
+  onKeydown = (playerId, { keycode, sequenceNumber }, callback) => {
     const backEndPlayer = backEndPlayers[playerId]
 
     if (!backEndPlayer || !backEndPlayer.alive) return
@@ -74,6 +76,7 @@ class GameManager {
         break
     }
     backEndPlayer.checkConstraints()
+    !!callback && callback(backEndPlayer)
   }
 
   onUpdatePlayerProperty = (playerId, property, value) => {
@@ -102,7 +105,7 @@ class GameManager {
     })
   }
 
-  onInitDisplay = (clientId, { width = 0, height = 0 }, callback) => {
+  onInitDisplay = (clientId, { width = 0, height = 0 }) => {
     this.displayers[clientId] = {
       canvas: {
         width,
@@ -119,9 +122,12 @@ class GameManager {
       score: 0,
       username: 'Me'
     })
+  }
 
+  initGameCallback(callback) {
     callback({
-      ip: NetworkManager.getIpAddress()
+      ip: NetworkManager.getIpAddress(),
+      ...SCREEN
     })
   }
 

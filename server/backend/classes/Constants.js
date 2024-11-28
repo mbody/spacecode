@@ -14,7 +14,8 @@ const CONSTANTES = {
   PLAYER_INVICIBLE_DELAY: 5000,
   SHOOT_INTERVAL: 500,
   // ENEMY
-  ENEMY_RADIUS: 20 // has to match enemy.svg file size /2 !
+  ENEMY_RADIUS: 20, // has to match enemy.svg file size /2 !
+  LEVEL_PROGRESS_PER_KILL: 0.1
 }
 
 module.exports = CONSTANTES

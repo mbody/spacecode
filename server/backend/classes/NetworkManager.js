@@ -4,6 +4,7 @@ const { networkInterfaces } = require('os')
 
 class NetworkManager {
   static io
+  static socketId
 
   static startApp() {
     // App setup

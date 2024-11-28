@@ -1,5 +1,7 @@
 import json
 from .network import sio
+from .sprite import Sprite
+import math
 
 
 
@@ -8,15 +10,14 @@ class Player:
         self.__x = x
         self.__y = y
         self.__rotation = rotation
-        self.lastShootTimestamp = 0
     
     def shoot(self):
         sio.emit("shoot")
 
-    def goForward(self):
+    def moveForward(self):
         self.__emitKeydown("ArrowUp")
 
-    def goBackward(self):
+    def moveBackward(self):
         self.__emitKeydown("ArrowDown")
 
     def turnLeft(self):
@@ -28,8 +29,20 @@ class Player:
     def toJSON(self):
         return self.__dict__
     
-    def __emitKeydown(self, keycode):
-        sio.emit("keydown", {"keycode": keycode})
+    def __emitKeydown(self, keycode):        
+        sio.emit("keydown", {"keycode": keycode}, callback=lambda backendPlayer: self.__onPlayerPositionUpdated(backendPlayer))
+
+    def __onPlayerPositionUpdated(self, backendPlayer):
+        self.__x = backendPlayer["x"]
+        self.__y = backendPlayer["y"]
+        self.__rotation = backendPlayer["rotation"]
+
+    def __updatePlayerProperty(self, attName, attValue):
+        if not (isinstance(attValue, float) or isinstance(attValue, int)):
+            raise TypeError("Expected float or int, got " + type(attValue).__name__)
+        setattr(self, f"__{attName}", attValue)
+        sio.emit("updatePlayerProperty", {"key": attName, "value":attValue})
+    
 
     ############################## Getters and setters
     @property
@@ -38,10 +51,7 @@ class Player:
     
     @x.setter
     def x(self, v: float | int):
-        if not (isinstance(v, float) or isinstance(v, int)):
-            raise TypeError("Expected float or int, got " + type(v).__name__)
-        self.__x = float(v)
-        sio.emit("updatePlayerX", self.__x)
+        self.__updatePlayerProperty("x", v)
 
     @property
     def y(self) -> float:
@@ -49,18 +59,16 @@ class Player:
     
     @y.setter
     def y(self, v: float | int):
-        if not (isinstance(v, float) or isinstance(v, int)):
-            raise TypeError("Expected float or int, got " + type(v).__name__)
-        self.__y = float(v)
-        sio.emit("updatePlayerY", self.__y)
+        self.__updatePlayerProperty("y", v)
 
     @property
     def rotation(self) -> float:
         return self.__rotation
+
+    def turnTowards(self, sprite: Sprite) -> float:
+        self.rotation = 90 + math.degrees(math.atan2(sprite.y-self.y, sprite.x-self.x))
+        
     
     @rotation.setter
     def rotation(self, v: float | int):
-        if not (isinstance(v, float) or isinstance(v, int)):
-            raise TypeError("Expected float or int, got " + type(v).__name__)
-        self.__rotation = float(v)
-        sio.emit("updatePlayerRotation", self.__rotation)
+        self.__updatePlayerProperty("rotation", v)
