@@ -219,7 +219,9 @@ socket.on('playerBonus', ({ player }) => {
 
 socket.on('gameOver', (winner) => {
   const gameoverBox = document.querySelector('#gameover')
-  gameoverBox.firstChild.innerHTML = `GAME OVER !<br>Winner is ${winner.username} `
+  document.querySelector(
+    '#gameoverMessage'
+  ).innerHTML = `GAME OVER !<br><br> <b>${winner.username}</b> wins with ${winner.score} points`
   gameoverBox.style.display = 'flex'
 
   setTimeout(() => {
