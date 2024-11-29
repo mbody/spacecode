@@ -78,14 +78,13 @@
         align-items: center;
         justify-content: center;
       }
-      #gameover {
+      #gameover div {
         background-color: #f44336;
         padding: 30;
         font-size: 2em;
         border-radius: 10px;
         font-weight: bold;
         text-align: center;
-        display: none;
       }
     </style>
   </head>
@@ -116,9 +115,11 @@
 
       <!-- GAME OVER DIALOG -->
 
-      <div id="gameover" class="alertbox">
-        GAME OVER !<br />
-        Winner is me !
+      <div id="gameover" class="alertbox" style="display: none">
+        <div>
+          GAME OVER !<br />
+          Winner is me !
+        </div>
       </div>
     </div>
 
@@ -132,6 +133,7 @@
     <script src="./js/classes/Utils.js"></script>
     <script src="./js/classes/GameObject.js"></script>
     <script src="./js/classes/Star.js"></script>
+    <script src="./js/classes/Bonus.js"></script>
     <script src="./js/classes/Background.js"></script>
     <script src="./js/classes/Enemy.js"></script>
     <script src="./js/classes/Player.js"></script>
@@ -141,8 +143,10 @@
     <script src="./js/eventListeners.js"></script>
     <div class="hidden">
       <img id="enemy" src="./img/enemy.svg" />
+      <img id="crystal" src="./img/crystal.svg" />
       <audio id="enemyDie" src="./sounds/enemyDie.mp3" />
       <audio id="playerDie" src="./sounds/playerDie.ogg" />
+      <audio id="bonusCollected" src="./sounds/bonus.ogg" />
     </div>
   </body>
 </html>

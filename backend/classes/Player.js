@@ -6,7 +6,9 @@ const {
   PLAYER_RADIUS,
   PLAYER_RESPAWN_DELAY,
   PLAYER_INVICIBLE_DELAY,
-  SHOOT_INTERVAL
+  SHOOT_INTERVAL,
+  BONUS_RADIUS,
+  BONUS_SCORE
 } = require('./Constants')
 const { GameObject } = require('./GameObject')
 const { ProjectileManager } = require('./ProjectileManager')
@@ -81,6 +83,10 @@ class Player extends GameObject {
     this.x = SCREEN.width * Math.random()
     this.y = SCREEN.height * Math.random()
     setTimeout(this.respawn, PLAYER_RESPAWN_DELAY)
+  }
+
+  collectBonus() {
+    this.score += BONUS_SCORE
   }
 
   respawn = () => {

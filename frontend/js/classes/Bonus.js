@@ -1,5 +1,5 @@
-class Enemy extends GameObject {
-  static dieSound
+class Bonus extends GameObject {
+  static collectedSound
 
   constructor(data) {
     super(data)
@@ -7,7 +7,7 @@ class Enemy extends GameObject {
 
   draw() {
     if (!this.sprite) {
-      this.sprite = GameObject.getMediaById('enemy')
+      this.sprite = GameObject.getMediaById('crystal')
     }
     c.beginPath()
     //c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
@@ -16,10 +16,10 @@ class Enemy extends GameObject {
     c.fill()
   }
 
-  static enemyKilled() {
-    if (!this.dieSound) {
-      this.dieSound = GameObject.getMediaById('enemyDie')
+  static bonusCollected() {
+    if (!this.collectedSound) {
+      this.collectedSound = GameObject.getMediaById('bonusCollected')
     }
-    this.dieSound.play()
+    this.collectedSound.play()
   }
 }

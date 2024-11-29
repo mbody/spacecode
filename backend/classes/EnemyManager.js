@@ -6,7 +6,12 @@ const {
   backEndProjectiles
 } = require('./SharedModel')
 const NetworkManager = require('./NetworkManager')
-const { ENEMY_RADIUS, LEVEL_PROGRESS_PER_KILL } = require('./Constants')
+const {
+  ENEMY_RADIUS,
+  LEVEL_PROGRESS_PER_KILL,
+  BONUS_PER_NB_KILLS
+} = require('./Constants')
+const { BonusManager } = require('./BonusManager')
 
 class EnemyManager {
   static currentLevel = 1
@@ -49,6 +54,9 @@ class EnemyManager {
     NetworkManager.io.emit('enemyKilled', { enemy, killedBy: enemyKiller })
 
     this.currentLevel += LEVEL_PROGRESS_PER_KILL
+    if (enemyKiller.score % BONUS_PER_NB_KILLS == 0) {
+      BonusManager.createNewBonus(enemy)
+    }
 
     delete backEndProjectiles[projectileId]
     delete backEndEnemies[enemyId]

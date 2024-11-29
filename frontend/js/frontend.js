@@ -20,6 +20,7 @@ const y = canvas.height / 2
 const frontEndPlayers = {}
 const frontEndProjectiles = {}
 const frontEndEnemies = {}
+const frontEndBonuses = {}
 const particles = []
 
 const background = new Background(SCREEN)
@@ -78,6 +79,25 @@ socket.on('updateEnemies', (backEndEnemies) => {
   for (const id in frontEndEnemies) {
     if (!backEndEnemies[id]) {
       delete frontEndEnemies[id]
+    }
+  }
+})
+
+socket.on('updateBonuses', (backEndBonuses) => {
+  for (const id in backEndBonuses) {
+    const bonus = backEndBonuses[id]
+
+    if (!frontEndBonuses[id]) {
+      frontEndBonuses[id] = new Bonus(bonus)
+    } else {
+      frontEndBonuses[id].x = bonus.x
+      frontEndBonuses[id].y = bonus.y
+    }
+  }
+
+  for (const id in frontEndBonuses) {
+    if (!backEndBonuses[id]) {
+      delete frontEndBonuses[id]
     }
   }
 })
@@ -193,14 +213,18 @@ socket.on('playerKilled', ({ player }) => {
   }
 })
 
+socket.on('playerBonus', ({ player }) => {
+  Bonus.bonusCollected()
+})
+
 socket.on('gameOver', (winner) => {
   const gameoverBox = document.querySelector('#gameover')
-  gameoverBox.innerHTML = `GAME OVER !<br>Winner is ${winner.username} !`
-  gameoverBox.style.display = 'block'
+  gameoverBox.firstChild.innerHTML = `GAME OVER !<br>Winner is ${winner.username} `
+  gameoverBox.style.display = 'flex'
 
   setTimeout(() => {
     gameoverBox.style.display = 'none'
-  }, 5000)
+  }, 10000)
 })
 
 let animationId
@@ -228,13 +252,9 @@ function animate() {
     frontEndPlayer.draw()
   }
 
-  for (const id in frontEndProjectiles) {
-    frontEndProjectiles[id].draw()
-  }
-
-  for (const id in frontEndEnemies) {
-    frontEndEnemies[id].draw()
-  }
+  Object.values(frontEndProjectiles).forEach((e) => e.draw())
+  Object.values(frontEndEnemies).forEach((e) => e.draw())
+  Object.values(frontEndBonuses).forEach((e) => e.draw())
 
   particles.forEach((particle, index) => {
     if (particle.alpha <= 0) {

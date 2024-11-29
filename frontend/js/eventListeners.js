@@ -4,6 +4,7 @@ const usernameForm = document.querySelector('#usernameForm')
 joinButton.addEventListener('click', () => {
   usernameForm.style.display = 'flex'
   joinButton.style.visibility = 'hidden'
+  document.querySelector('#usernameInput').focus()
 })
 
 usernameForm.addEventListener('submit', (event) => {

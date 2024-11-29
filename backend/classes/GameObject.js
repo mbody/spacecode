@@ -31,6 +31,16 @@ class GameObject {
     return isOut
   }
 
+  bounce() {
+    const margin = this.radius * 2
+    if (this.x < -margin || this.x > SCREEN.width + margin) {
+      this.velocity.x = -this.velocity.x
+    }
+    if (this.y < -margin || this.y > SCREEN.height + margin) {
+      this.velocity.y = -this.velocity.y
+    }
+  }
+
   isHitBy(projectile) {
     const distance = Math.hypot(projectile.x - this.x, projectile.y - this.y)
     return distance < this.radius

@@ -4,7 +4,8 @@ const { Player } = require('./Player')
 const {
   backEndEnemies,
   backEndPlayers,
-  backEndProjectiles
+  backEndProjectiles,
+  backEndBonuses
 } = require('./SharedModel')
 
 class PlayerManager {
@@ -26,6 +27,19 @@ class PlayerManager {
             if (PlayerManager.hasNoMorePlayer()) {
               return false
             }
+            break
+          }
+        }
+      }
+
+      // Collision avec bonus
+      if (player.alive) {
+        for (const bonusId in backEndBonuses) {
+          const bonus = backEndBonuses[bonusId]
+          if (player.isHitBy(bonus)) {
+            // Player hit
+            PlayerManager.onPlayerBonus({ player, bonus })
+            delete backEndBonuses[bonusId]
             break
           }
         }
@@ -52,6 +66,11 @@ class PlayerManager {
   static onPlayerDie({ player }) {
     NetworkManager.io.emit('playerKilled', { player })
     player.die()
+  }
+
+  static onPlayerBonus({ player, bonus }) {
+    NetworkManager.io.emit('playerBonus', { player, bonus })
+    player.collectBonus(bonus)
   }
 
   static getWinner() {

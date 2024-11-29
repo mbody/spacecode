@@ -2,13 +2,15 @@ const { EnemyManager } = require('./classes/EnemyManager')
 const {
   backEndPlayers,
   backEndEnemies,
-  backEndProjectiles
+  backEndProjectiles,
+  backEndBonuses
 } = require('./classes/SharedModel')
 const { ProjectileManager } = require('./classes/ProjectileManager')
 const { PlayerManager } = require('./classes/PlayerManager')
 const { Player } = require('./classes/Player')
 const NetworkManager = require('./classes/NetworkManager')
 const { SCREEN } = require('./classes/Constants')
+const { BonusManager } = require('./classes/BonusManager')
 
 class GameManager {
   displayers = {}
@@ -130,6 +132,9 @@ class GameManager {
     // update enemies with projectiles
     EnemyManager.updateEnemies()
 
+    // update bonuses
+    BonusManager.updateBonuses()
+
     // update players
     const hasPlayerAlive = PlayerManager.updatePlayers()
     if (!hasPlayerAlive) {
@@ -140,6 +145,7 @@ class GameManager {
     NetworkManager.io.emit('updatePlayers', backEndPlayers)
     //console.log('updating ' + JSON.stringify(backEndEnemies))
     NetworkManager.io.emit('updateEnemies', backEndEnemies)
+    NetworkManager.io.emit('updateBonuses', backEndBonuses)
   }
 
   gameOver() {
@@ -147,6 +153,7 @@ class GameManager {
     NetworkManager.io.emit('gameOver', winner)
     EnemyManager.resetAllEnemies()
     PlayerManager.resetAllPlayers()
+    BonusManager.resetAllBonuses()
   }
 }
 
