@@ -24,11 +24,11 @@ class GameManager {
     console.log(`New client connected ${socket.id}!`)
     socket.on('initDisplay', (data, callback) => {
       this.onInitDisplay(socket.id, data)
-      this.initGameCallback(callback)
+      callback && this.initGameCallback(callback)
     })
     socket.on('newPlayer', (data, callback) => {
       this.onNewPlayer(socket.id, data)
-      this.initGameCallback(callback)
+      callback && this.initGameCallback(callback)
     })
     socket.on('disconnect', (data) => this.onDisconnect(socket.id, data))
     socket.on('updatePlayerProperty', ({ key, value }, callback) =>
@@ -112,16 +112,6 @@ class GameManager {
         height
       }
     }
-    // ///debug///////////////////////////////////////////////////////////////
-
-    PlayerManager.createNewPlayer({
-      id: clientId,
-      rotation: 45,
-      color: `hsl(${360 * Math.random()}, 100%, 50%)`,
-      sequenceNumber: 0,
-      score: 0,
-      username: 'Me'
-    })
   }
 
   initGameCallback(callback) {

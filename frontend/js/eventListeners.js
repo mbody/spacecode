@@ -1,31 +1,15 @@
-addEventListener('click', (event) => {
-  const canvas = document.querySelector('canvas')
-  const { top, left } = canvas.getBoundingClientRect()
-  const playerPosition = {
-    x: frontEndPlayers[socket.id].x,
-    y: frontEndPlayers[socket.id].y
-  }
+const joinButton = document.querySelector('#joinButton')
+const usernameForm = document.querySelector('#usernameForm')
 
-  const angle = Math.atan2(
-    event.clientY - top - playerPosition.y,
-    event.clientX - left - playerPosition.x
-  )
+joinButton.addEventListener('click', () => {
+  usernameForm.style.display = 'flex'
+  joinButton.style.visibility = 'hidden'
+})
 
-  // const velocity = {
-  //   x: Math.cos(angle) * 5,
-  //   y: Math.sin(angle) * 5
-  // }
-
-  socket.emit('shoot')
-  // frontEndProjectiles.push(
-  //   new Projectile({
-  //     x: playerPosition.x,
-  //     y: playerPosition.y,
-  //     radius: 5,
-  //     color: 'white',
-  //     velocity
-  //   })
-  // )
-
-  //console.log(frontEndProjectiles)
+usernameForm.addEventListener('submit', (event) => {
+  event.preventDefault()
+  usernameForm.style.display = 'none'
+  socket.emit('newPlayer', {
+    username: document.querySelector('#usernameInput').value
+  })
 })

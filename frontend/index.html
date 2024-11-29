@@ -56,12 +56,12 @@
         font-size: 18px;
       }
       #serverUrl {
-        padding-top: 5;
+        padding: 5 10;
         color: #7b7b7b;
         text-align: center;
       }
       .hidden {
-        display: none;
+        display: none !important;
       }
       .alertbox {
         display: flex;
@@ -73,6 +73,20 @@
         bottom: 0;
         left: 0;
       }
+      .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #gameover {
+        background-color: #f44336;
+        padding: 30;
+        font-size: 2em;
+        border-radius: 10px;
+        font-weight: bold;
+        text-align: center;
+        display: none;
+      }
     </style>
   </head>
   <body style="display: flex; align-items: center; justify-content: center">
@@ -83,38 +97,28 @@
       </div>
       <canvas></canvas>
       <div id="serverUrl">localhost</div>
-      <!-- username input 
-      <div class="alertbox">
-        <form id="usernameForm">
+      <div class="center">
+        <button id="joinButton">Join game</button>
+      </div>
+
+      <!-- ADD PLAYER DIALOG -->
+
+      <form id="usernameForm" class="alertbox" style="display: none">
+        <div>
           <div>
-            <input
-              id="usernameInput"
-              type="text"
-              placeholder="Username"
-            />
+            <input id="usernameInput" type="text" placeholder="Username" />
           </div>
           <div style="text-align: center; margin-top: 8px">
-            <button>Start!</button>
+            <button id="startButton">Start!</button>
           </div>
-        </form>
-      </div>
-      username input end -->
-      <div class="alertbox">
-        <div
-          id="gameover"
-          style="
-            background-color: #f44336;
-            padding: 30;
-            font-size: 2em;
-            border-radius: 10px;
-            font-weight: bold;
-            text-align: center;
-            display: none;
-          "
-        >
-          GAME OVER !<br />
-          Winner is me !
         </div>
+      </form>
+
+      <!-- GAME OVER DIALOG -->
+
+      <div id="gameover" class="alertbox">
+        GAME OVER !<br />
+        Winner is me !
       </div>
     </div>
 

@@ -1,3 +1,4 @@
+const { Utils } = require('../../frontend/js/classes/Utils')
 const { SCREEN } = require('./Constants')
 
 class GameObject {
@@ -5,7 +6,7 @@ class GameObject {
     x = SCREEN.width * Math.random(),
     y = SCREEN.height * Math.random(),
     radius,
-    color,
+    color = Utils.getRandomColor(),
     velocity
   }) {
     this.x = x
