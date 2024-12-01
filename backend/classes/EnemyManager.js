@@ -54,7 +54,7 @@ class EnemyManager {
     NetworkManager.io.emit('enemyKilled', { enemy, killedBy: enemyKiller })
 
     this.currentLevel += LEVEL_PROGRESS_PER_KILL
-    if (enemyKiller.score % BONUS_PER_NB_KILLS == 0) {
+    if (enemyKiller && enemyKiller.score % BONUS_PER_NB_KILLS == 0) {
       BonusManager.createNewBonus(enemy)
     }
 

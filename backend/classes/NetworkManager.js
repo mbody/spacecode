@@ -13,6 +13,12 @@ class NetworkManager {
       res.sendFile(__dirname + '/index.html')
     })
 
+    // Codelab
+    app.use('/codelab', express.static('codelab'))
+    app.get('/codelab/', (req, res) => {
+      res.sendFile(__dirname + '/codelab/index.html')
+    })
+
     // socket.io setup
     const http = require('http')
     const server = http.createServer(app)

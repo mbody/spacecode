@@ -87,6 +87,7 @@ class Player extends GameObject {
 
   collectBonus() {
     this.score += BONUS_SCORE
+    this.respawn()
   }
 
   respawn = () => {
