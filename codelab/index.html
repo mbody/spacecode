@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Space Code Lab</title>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="./node_modules/blockly/blockly_compressed.js"></script>
+    <script src="./node_modules/blockly/blocks_compressed.js"></script>
+    <script src="./node_modules/blockly/javascript_compressed.js"></script>
+    <script src="./node_modules/@blockly/field-colour/dist/index.js"></script>
+    <script src="./node_modules/blockly/msg/fr.js"></script>
+    <script src="./node_modules/blockly-field-color-wheel/dist/index.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background-color: #fff;
+        font-family: sans-serif;
+        overflow: hidden;
+      }
+      h1 {
+        font-weight: normal;
+        font-size: 140%;
+      }
+      table {
+        height: 100%;
+        width: 100%;
+      }
+      #blocklyArea {
+        height: 99%;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>
+          <p>
+            <button onclick="showCode()">Show JavaScript</button>
+            <button onclick="runCode()">Run JavaScript</button>
+            <button onclick="testSpacecodeClient()">Test client</button>
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td id="blocklyArea"></td>
+      </tr>
+    </table>
+
+    <div id="blocklyDiv" style="position: absolute"></div>
+    <script src="./js/constantes.js"></script>
+    <script src="./js/spacecode-client.js"></script>
+    <script src="./js/spacecode-blocks.js"></script>
+    <script src="./js/eventListeners.js"></script>
+    <script src="./js/startblocks.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
