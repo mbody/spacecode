@@ -142,6 +142,59 @@ Blockly.common.defineBlocksWithJsonArray([
     colour: BLOCK_COLOR
   },
   {
+    type: 'spacecode_isGamepadButtonPressed',
+    tooltip: 'Retourne true si le bouton B0 à B5 est enfoncé, false sinon',
+    helpUrl:
+      'https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode',
+    message0: 'Bouton gamepad %1 enfoncé %2',
+    args0: [
+      {
+        type: 'field_dropdown',
+        name: 'CODE',
+        options: [
+          ['B0', GAMEPAD_BUTTON.B0],
+          ['B1', GAMEPAD_BUTTON.B1],
+          ['B2', GAMEPAD_BUTTON.B2],
+          ['B3', GAMEPAD_BUTTON.B3],
+          ['B4', GAMEPAD_BUTTON.B4],
+          ['B5', GAMEPAD_BUTTON.B5]
+        ]
+      },
+      {
+        type: 'input_dummy',
+        name: 'NAME'
+      }
+    ],
+    output: 'Boolean',
+    colour: BLOCK_COLOR
+  },
+  {
+    type: 'spacecode_isGamepadJoystickPointing',
+    tooltip:
+      'Retourne true si la touche correspondant au code est enfoncée, false sinon',
+    helpUrl:
+      'https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode',
+    message0: 'Joystick game %1 %2',
+    args0: [
+      {
+        type: 'field_dropdown',
+        name: 'CODE',
+        options: [
+          ['Haut', JOYSTICK_DIRECTION.UP],
+          ['Bas', JOYSTICK_DIRECTION.DOWN],
+          ['Gauche', JOYSTICK_DIRECTION.LEFT],
+          ['Droite', JOYSTICK_DIRECTION.RIGHT]
+        ]
+      },
+      {
+        type: 'input_dummy',
+        name: 'NAME'
+      }
+    ],
+    output: 'Boolean',
+    colour: BLOCK_COLOR
+  },
+  {
     type: 'spacecode_getAttribute',
     tooltip: "Valeur d'un attribut du vaisseau ",
     helpUrl: '',
@@ -258,6 +311,20 @@ javascript.javascriptGenerator.forBlock['spacecode_isKeyPressed'] = function (
 
   return [code, javascript.Order.NONE]
 }
+javascript.javascriptGenerator.forBlock['spacecode_isGamepadButtonPressed'] =
+  function (block) {
+    const keycode = block.getFieldValue('CODE')
+    const code = `Spacecode.isGamepadButtonPressed('${keycode}')`
+
+    return [code, javascript.Order.NONE]
+  }
+javascript.javascriptGenerator.forBlock['spacecode_isGamepadJoystickPointing'] =
+  function (block) {
+    const keycode = block.getFieldValue('CODE')
+    const code = `Spacecode.isGamepadJoystick('${keycode}')`
+
+    return [code, javascript.Order.NONE]
+  }
 
 javascript.javascriptGenerator.forBlock['spacecode_getAttribute'] = function (
   block

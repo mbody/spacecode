@@ -4,13 +4,6 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-const KEYMAP = {
-  ArrowUp: 'up',
-  ArrowDown: 'down',
-  ArrowLeft: 'left',
-  ArrowRight: 'right'
-}
-
 class SpacecodeManager {
   x
   y
@@ -26,6 +19,9 @@ class SpacecodeManager {
     window.addEventListener('keyup', (event) => {
       this.keycodes[event.key] = false
     })
+
+    window.addEventListener('gamepadconnected', GamepadAPI.connect)
+    window.addEventListener('gamepaddisconnected', GamepadAPI.disconnect)
   }
 
   connect(username, color) {
@@ -69,8 +65,21 @@ class SpacecodeManager {
     return this.keycodes[code]
   }
 
+  isGamepadJoystick(direction) {
+    const isPointing = GamepadAPI.joystickPointing(direction)
+    if (isPointing) {
+      'Pointing to ' + direction
+    }
+    return isPointing
+  }
+
+  isGamepadButtonPressed(button) {
+    return GamepadAPI.buttonPressed(button, true)
+  }
+
   async update() {
     await sleep(1000 / 20)
+    GamepadAPI.update()
   }
 
   shoot() {

@@ -167,6 +167,14 @@ var toolbox = {
         },
         {
           kind: 'block',
+          type: 'spacecode_isGamepadButtonPressed'
+        },
+        {
+          kind: 'block',
+          type: 'spacecode_isGamepadJoystickPointing'
+        },
+        {
+          kind: 'block',
           type: 'spacecode_getAttribute'
         },
         {
