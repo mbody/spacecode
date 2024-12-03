@@ -8,6 +8,9 @@ Blockly.Themes.Spacecode = Blockly.Theme.defineTheme('spacecode', {
     },
     spacecode_category: {
       colour: COLORS.spacecodeCategory
+    },
+    input_category: {
+      colour: COLORS.inputCategory
     }
   }
 })
@@ -17,12 +20,14 @@ Blockly.Themes.Spacecode = Blockly.Theme.defineTheme('spacecode', {
 var toolbox = {
   kind: 'categoryToolbox',
   contents: [
+    /*    
     {
       kind: 'category',
       name: 'Base',
       categorystyle: 'basic_category',
       contents: [{ kind: 'block', type: 'color_wheel_picker' }]
     },
+    */
     {
       kind: 'category',
       name: 'Logique',
@@ -138,6 +143,25 @@ var toolbox = {
 
     {
       kind: 'category',
+      name: 'Entrées',
+      categorystyle: 'input_category',
+      contents: [
+        {
+          kind: 'block',
+          type: 'spacecode_isKeyPressed'
+        },
+        {
+          kind: 'block',
+          type: 'spacecode_isGamepadButtonPressed'
+        },
+        {
+          kind: 'block',
+          type: 'spacecode_isGamepadJoystickPointing'
+        }
+      ]
+    },
+    {
+      kind: 'category',
       name: 'Space Code',
       categorystyle: 'spacecode_category',
       contents: [
@@ -160,18 +184,6 @@ var toolbox = {
         {
           kind: 'block',
           type: 'spacecode_shoot'
-        },
-        {
-          kind: 'block',
-          type: 'spacecode_isKeyPressed'
-        },
-        {
-          kind: 'block',
-          type: 'spacecode_isGamepadButtonPressed'
-        },
-        {
-          kind: 'block',
-          type: 'spacecode_isGamepadJoystickPointing'
         },
         {
           kind: 'block',

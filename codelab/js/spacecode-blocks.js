@@ -19,6 +19,7 @@ Blockly.defineBlocksWithJsonArray([
 ])
 
 BLOCK_COLOR = 285
+INPUT_COLOR = 125
 
 Blockly.common.defineBlocksWithJsonArray([
   {
@@ -139,7 +140,7 @@ Blockly.common.defineBlocksWithJsonArray([
       }
     ],
     output: 'Boolean',
-    colour: BLOCK_COLOR
+    colour: INPUT_COLOR
   },
   {
     type: 'spacecode_isGamepadButtonPressed',
@@ -166,7 +167,7 @@ Blockly.common.defineBlocksWithJsonArray([
       }
     ],
     output: 'Boolean',
-    colour: BLOCK_COLOR
+    colour: INPUT_COLOR
   },
   {
     type: 'spacecode_isGamepadJoystickPointing',
@@ -174,7 +175,7 @@ Blockly.common.defineBlocksWithJsonArray([
       'Retourne true si la touche correspondant au code est enfoncée, false sinon',
     helpUrl:
       'https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode',
-    message0: 'Joystick game %1 %2',
+    message0: 'Joystick vers %1 %2',
     args0: [
       {
         type: 'field_dropdown',
@@ -192,7 +193,7 @@ Blockly.common.defineBlocksWithJsonArray([
       }
     ],
     output: 'Boolean',
-    colour: BLOCK_COLOR
+    colour: INPUT_COLOR
   },
   {
     type: 'spacecode_getAttribute',

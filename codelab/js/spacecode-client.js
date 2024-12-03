@@ -66,11 +66,7 @@ class SpacecodeManager {
   }
 
   isGamepadJoystick(direction) {
-    const isPointing = GamepadAPI.joystickPointing(direction)
-    if (isPointing) {
-      'Pointing to ' + direction
-    }
-    return isPointing
+    return GamepadAPI.joystickPointing(direction)
   }
 
   isGamepadButtonPressed(button) {

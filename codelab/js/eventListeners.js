@@ -3,6 +3,8 @@ function showCode() {
   javascript.javascriptGenerator.INFINITE_LOOP_TRAP = null
   var code = javascript.javascriptGenerator.workspaceToCode(demoWorkspace)
   alert(code)
+  console.log(code)
+
   saveCode()
 }
 
