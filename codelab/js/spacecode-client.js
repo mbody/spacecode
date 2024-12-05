@@ -4,11 +4,21 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+function radToDeg(rad) {
+  return (rad * 180) / Math.PI
+}
+
+function distanceBetween(a, b) {
+  return Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)
+}
+
 class SpacecodeManager {
+  id
   x
   y
   rotation
   keycodes = {}
+  enemies
 
   constructor() {
     window.addEventListener('keydown', (event) => {
@@ -25,8 +35,16 @@ class SpacecodeManager {
   }
 
   connect(username, color) {
-    socket = io()
+    if (socket != null) {
+      this.disconnect()
+    }
+    socket = io.connect()
+    socket.on('connect', () => {
+      this.id = socket.id
+    })
     socket.emit('newPlayer', { username, color }, this.onInitGame)
+    socket.on('updateEnemies', this.onUpdateEnemies)
+    socket.on('updatePlayers', this.onUpdatePlayers)
   }
   disconnect() {
     socket.disconnect()
@@ -53,9 +71,11 @@ class SpacecodeManager {
   }
   setX(x) {
     this.updatePlayerProperty('x', x)
+    this.x = x
   }
   setY(y) {
     this.updatePlayerProperty('y', y)
+    this.y = y
   }
   updatePlayerProperty(key, value) {
     socket.emit('updatePlayerProperty', { key, value })
@@ -73,8 +93,8 @@ class SpacecodeManager {
     return GamepadAPI.buttonPressed(button, true)
   }
 
-  async update() {
-    await sleep(1000 / 20)
+  update = async () => {
+    await sleep(FRAME_RATE)
     GamepadAPI.update()
   }
 
@@ -82,6 +102,43 @@ class SpacecodeManager {
     socket.emit('shoot')
   }
 
+  onUpdateEnemies = (enemies) => {
+    this.enemies = Object.values(enemies)
+  }
+
+  onUpdatePlayers = (players) => {
+    const me = players[this.id]
+    if (me) {
+      this.x = me.x
+      this.y = me.y
+      this.rotation = me.rotation
+    }
+    this.players = Object.values(players)
+  }
+
+  getNearestEnemy() {
+    let target = {}
+    if (this.enemies != null && this.enemies.length > 0) {
+      target = this.enemies[0]
+      let distance = distanceBetween(this, target)
+
+      for (let i = 1; i < this.enemies.length; i++) {
+        const e = this.enemies[i]
+        const d = distanceBetween(this, e)
+        if (d < distance) {
+          distance = d
+          target = e
+        }
+      }
+    }
+    return target
+  }
+
+  orientTo({ x = -1, y = -1 }) {
+    if (x != -1) {
+      this.setRotation(90 + radToDeg(Math.atan2(y - this.y, x - this.x)))
+    }
+  }
   //// privates methods
 
   _emitKeydown(keycode) {

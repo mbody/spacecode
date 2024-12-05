@@ -1,4 +1,4 @@
-var startBlocks = {
+const DEMO_KEYBOARD = {
   blocks: {
     languageVersion: 0,
     blocks: [

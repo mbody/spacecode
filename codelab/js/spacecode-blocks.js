@@ -122,6 +122,37 @@ Blockly.common.defineBlocksWithJsonArray([
     colour: BLOCK_COLOR
   },
   {
+    type: 'spacecode_orientTo',
+    tooltip: '',
+    helpUrl: '',
+    message0: "S'orienter vers %1",
+    args0: [
+      {
+        type: 'input_value',
+        name: 'SPRITE',
+        check: 'Sprite'
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 225
+  },
+  {
+    type: 'spacecode_orientToNearestEnemy',
+    tooltip: '',
+    helpUrl: '',
+    message0: "S'orienter vers l'ennemi le plus proche %1",
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'NAME'
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: BLOCK_COLOR
+  },
+  {
     type: 'spacecode_isKeyPressed',
     tooltip:
       'Retourne true si la touche correspondant au code est enfoncée, false sinon',
@@ -248,6 +279,20 @@ Blockly.common.defineBlocksWithJsonArray([
     nextStatement: null,
     colour: BLOCK_COLOR,
     inputsInline: true
+  },
+  {
+    type: 'spacecode_getNearestEnemy',
+    tooltip: '',
+    helpUrl: '',
+    message0: 'Enemi le plus proche %1',
+    args0: [
+      {
+        type: 'input_dummy',
+        name: 'NAME'
+      }
+    ],
+    output: 'Sprite',
+    colour: 225
   }
 ])
 
@@ -274,16 +319,19 @@ javascript.javascriptGenerator.forBlock['spacecode_move'] = (block) => {
   return code
 }
 
+let LOOP_CREATION_TIMESTAMP = 0
+
 javascript.javascriptGenerator.forBlock['spacecode_loop'] = function (block) {
   const statement_content = javascript.javascriptGenerator.statementToCode(
     block,
     'CONTENT'
   )
 
+  LOOP_CREATION_TIMESTAMP = Date.now()
   const code = `
   loop = async () => {
     let e
-    while(e === undefined){
+    while(e === undefined && LOOP_CREATION_TIMESTAMP === ${LOOP_CREATION_TIMESTAMP}){
         try{
           ${statement_content}
           await Spacecode.update()
@@ -303,6 +351,30 @@ javascript.javascriptGenerator.forBlock['spacecode_shoot'] = function (block) {
   const code = `Spacecode.shoot()\n`
   return code
 }
+
+javascript.javascriptGenerator.forBlock['spacecode_orientTo'] = function (
+  block
+) {
+  const value_sprite = javascript.javascriptGenerator.valueToCode(
+    block,
+    'SPRITE',
+    javascript.Order.ATOMIC
+  )
+
+  const code = `Spacecode.orientTo(${value_sprite})\n`
+  return code
+}
+javascript.javascriptGenerator.forBlock['spacecode_getNearestEnemy'] =
+  function () {
+    const code = `Spacecode.getNearestEnemy()\n`
+    return [code, javascript.Order.NONE]
+  }
+
+javascript.javascriptGenerator.forBlock['spacecode_orientToNearestEnemy'] =
+  function (block) {
+    const code = `Spacecode.orientToNearestEnemy()\n`
+    return code
+  }
 
 javascript.javascriptGenerator.forBlock['spacecode_isKeyPressed'] = function (
   block
@@ -346,6 +418,6 @@ javascript.javascriptGenerator.forBlock['spacecode_setAttribute'] = function (
     javascript.Order.ATOMIC
   )
 
-  const code = `Spacecode.updatePlayerProperty('${attribute}',${value})`
+  const code = `Spacecode.updatePlayerProperty('${attribute}',${value})\n`
   return code
 }

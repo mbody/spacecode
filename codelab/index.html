@@ -3,11 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <title>Space Code Lab</title>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <link href="./css/icon.css" rel="stylesheet" />
+    <link href="./css/menu.css" rel="stylesheet" />
+    <script src="./node_modules/socket.io/client-dist/socket.io.min.js"></script>
     <script src="./node_modules/blockly/blockly_compressed.js"></script>
     <script src="./node_modules/blockly/blocks_compressed.js"></script>
     <script src="./node_modules/blockly/javascript_compressed.js"></script>
@@ -94,7 +92,7 @@
   </head>
   <body>
     <div class="page-container">
-      <div class="toolbar" aria-role="banner">
+      <div class="toolbar menu" aria-role="banner">
         <div class="btnGroup">
           <div class="logo">
             <span class="material-icons"> rocket_launch </span>
@@ -107,7 +105,17 @@
             <button id="load-btn" class="btn">
               <span class="material-icons">open_in_browser</span>
             </button>
-            <md-menu id="load-menu" anchor="load-btn"></md-menu>
+            <div class="submenu">
+              <button id="loadKeyboardDemoBtn" class="btn">
+                <span>Contrôle clavier</span>
+              </button>
+              <button id="loadPatrolDemoBtn" class="btn">
+                <span>Patrouilleur</span>
+              </button>
+              <button id="loadHunterDemoBtn" class="btn">
+                <span>Chasseur</span>
+              </button>
+            </div>
           </span>
           <button id="delete-btn" class="btn">
             <span class="material-icons">delete</span>
@@ -117,8 +125,8 @@
           <button id="view-code-btn" class="btn" onclick="showCode()">
             <span class="material-icons">javascript</span>
           </button>
-          <button id="run-btn" class="btn" onclick="runCode()">
-            <span class="material-icons">play_arrow</span>
+          <button id="run-btn" class="btn">
+            <span class="material-icons" id="run-btn-icon">play_arrow</span>
           </button>
         </div>
       </div>
@@ -131,7 +139,9 @@
     <script src="./js/spacecode-client.js"></script>
     <script src="./js/spacecode-blocks.js"></script>
     <script src="./js/eventListeners.js"></script>
-    <script src="./js/startblocks.js"></script>
+    <script src="./js/demo-keyboard.js"></script>
+    <script src="./js/demo-hunter.js"></script>
+    <script src="./js/demo-patrol.js"></script>
     <script src="./js/main.js"></script>
   </body>
 </html>

@@ -187,6 +187,14 @@ var toolbox = {
         },
         {
           kind: 'block',
+          type: 'spacecode_getNearestEnemy'
+        },
+        {
+          kind: 'block',
+          type: 'spacecode_orientTo'
+        },
+        {
+          kind: 'block',
           type: 'spacecode_getAttribute'
         },
         {
@@ -239,7 +247,21 @@ window.addEventListener('resize', onresize, false)
 onresize()
 
 ////////////////// START SCRIPT
+
+function loadDemo(demoblocks) {
+  Blockly.serialization.workspaces.load(demoblocks, demoWorkspace)
+}
+
+// demos
+const demos = {
+  loadKeyboardDemoBtn: DEMO_KEYBOARD,
+  loadPatrolDemoBtn: DEMO_PATROL,
+  loadHunterDemoBtn: DEMO_HUNTER
+}
+for (const [k, v] of Object.entries(demos)) {
+  document.querySelector('#' + k).addEventListener('click', () => loadDemo(v))
+}
+
 if (!restoreCode()) {
-  // startBlocks defined in a separate file !
-  Blockly.serialization.workspaces.load(startBlocks, demoWorkspace)
+  loadDemo(DEMO_KEYBOARD)
 }

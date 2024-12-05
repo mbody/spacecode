@@ -8,20 +8,31 @@ function showCode() {
   saveCode()
 }
 
-function runCode() {
-  // Generate JavaScript code and run it.
-  window.LoopTrap = 1000
-  javascript.javascriptGenerator.INFINITE_LOOP_TRAP =
-    'if (--window.LoopTrap < 0) throw "Infinite loop.";\n'
-  var code = javascript.javascriptGenerator.workspaceToCode(demoWorkspace)
-  javascript.javascriptGenerator.INFINITE_LOOP_TRAP = null
-  try {
-    eval(code)
-    saveCode()
-  } catch (e) {
-    alert(e)
+const runButton = document.querySelector('#run-btn')
+let isRunning = false
+runButton.addEventListener('click', () => {
+  if (isRunning) {
+    eval('Spacecode.disconnect()')
+  } else {
+    // Generate JavaScript code and run it.
+    window.LoopTrap = 1000
+    javascript.javascriptGenerator.INFINITE_LOOP_TRAP =
+      'if (--window.LoopTrap < 0) throw "Infinite loop.";\n'
+    var code = javascript.javascriptGenerator.workspaceToCode(demoWorkspace)
+    javascript.javascriptGenerator.INFINITE_LOOP_TRAP = null
+    try {
+      eval(code)
+      saveCode()
+    } catch (e) {
+      alert(e)
+    }
+    runButton.blur()
   }
-}
+  isRunning = !isRunning
+  document.querySelector('#run-btn-icon ').innerHTML = isRunning
+    ? 'pause'
+    : 'play_arrow'
+})
 
 function saveCode() {
   // Serialize the state.
