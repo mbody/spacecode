@@ -78,7 +78,7 @@ class SpacecodeManager {
     this.y = y
   }
   updatePlayerProperty(key, value) {
-    socket.emit('updatePlayerProperty', { key, value })
+    socket && socket.emit('updatePlayerProperty', { key, value })
   }
 
   isKeyPressed(code) {

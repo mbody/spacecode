@@ -19,6 +19,12 @@ class NetworkManager {
       res.sendFile(__dirname + '/codelab/index.html')
     })
 
+    // Play
+    app.use('/play', express.static('play'))
+    app.get('/play/', (req, res) => {
+      res.sendFile(__dirname + '/play/index.html')
+    })
+
     // socket.io setup
     const http = require('http')
     const server = http.createServer(app)
