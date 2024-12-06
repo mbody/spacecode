@@ -5,6 +5,8 @@
     <title>Space Code Lab</title>
     <link href="./css/icon.css" rel="stylesheet" />
     <link href="./css/menu.css" rel="stylesheet" />
+    <link href="./css/tooltip.css" rel="stylesheet" />
+    <link href="./css/style.css" rel="stylesheet" />
     <script src="./node_modules/socket.io/client-dist/socket.io.min.js"></script>
     <script src="./node_modules/blockly/blockly_compressed.js"></script>
     <script src="./node_modules/blockly/blocks_compressed.js"></script>
@@ -12,83 +14,6 @@
     <script src="./node_modules/@blockly/field-colour/dist/index.js"></script>
     <script src="./node_modules/blockly/msg/fr.js"></script>
     <script src="./node_modules/blockly-field-color-wheel/dist/index.js"></script>
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-      }
-      body {
-        background-color: #fff;
-        font-family: sans-serif;
-        overflow: hidden;
-      }
-      h1 {
-        font-weight: normal;
-        font-size: 140%;
-      }
-      .page-container {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-      #blocklyArea {
-        height: 99%;
-      }
-
-      .toolbar {
-        width: 100%;
-        height: 64px;
-        padding: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-sizing: border-box;
-        background: #026fb2;
-        font-family: 'Google Sans', Roboto, Arial, sans-serif;
-      }
-      .btnGroup {
-        align-items: center;
-        display: flex;
-      }
-
-      .logo {
-        height: 36px;
-        border: 0;
-        box-shadow: none;
-        margin: 0 16px 0 0;
-        color: #ffffff;
-        font-size: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .btn {
-        background-color: transparent;
-        border: 2px solid transparent;
-        border-radius: 3px;
-        color: #ffffff;
-        font-family: 'Open Sans', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        padding: 2px 4px;
-        margin: 0 8px;
-      }
-      .btn:hover {
-        background-color: #02629d;
-      }
-      .material-icons {
-        font-size: 34px;
-      }
-      .btn .material-icons {
-        margin: 1px;
-      }
-      .btn:hover .material-icons {
-        margin: 0px;
-        font-size: 36px;
-      }
-    </style>
   </head>
   <body>
     <div class="page-container">
@@ -117,8 +42,14 @@
               </button>
             </div>
           </span>
-          <button id="delete-btn" class="btn">
-            <span class="material-icons">delete</span>
+          <button id="delete-btn" class="btn tooltip" onclick="exportAsFile()">
+            <span class="material-icons">download</span>
+            <span class="tooltiptext">Exporter</span>
+          </button>
+          <button id="delete-btn" class="btn tooltip" onclick="importFile()">
+            <span class="material-icons">upload</span>
+            <span class="tooltiptext">Importer</span>
+            <input id="uploadInput" type="file" class="hidden" />
           </button>
         </div>
         <div class="btnGroup">

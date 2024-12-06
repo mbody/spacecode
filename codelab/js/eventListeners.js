@@ -57,6 +57,35 @@ function restoreCode() {
   return true
 }
 
+function exportAsFile() {
+  var tempLink = document.createElement('a')
+  const state = JSON.stringify(
+    Blockly.serialization.workspaces.save(demoWorkspace)
+  )
+  var taBlob = new Blob([state], { type: 'application/json' })
+  tempLink.setAttribute('href', URL.createObjectURL(taBlob))
+  tempLink.setAttribute('download', `spacecode.json`)
+  tempLink.click()
+
+  URL.revokeObjectURL(tempLink.href)
+}
+
+function importFile() {
+  const uploadInput = document.getElementById('uploadInput')
+  uploadInput.addEventListener('change', function (event) {
+    let file = event.target.files[0]
+    let reader = new FileReader()
+
+    reader.onload = function (event) {
+      var blocks = JSON.parse(event.target.result)
+      Blockly.serialization.workspaces.load(blocks, demoWorkspace)
+    }
+
+    reader.readAsText(file)
+  })
+  uploadInput.click()
+}
+
 async function testSpacecodeClient() {
   Spacecode.connect('Mathurin', '#f00dbb')
   for (let index = 0; index < 100; index++) {
