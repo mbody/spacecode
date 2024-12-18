@@ -5,3 +5,4 @@ const COLORS = {
 }
 
 const FRAME_RATE = 1000 / 20
+

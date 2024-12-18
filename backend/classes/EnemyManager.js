@@ -18,7 +18,9 @@ class EnemyManager {
   static enemyId = 0
 
   static updateEnemies() {
-    while (Object.keys(backEndEnemies).length < this.currentLevel) {
+    while (
+      Object.keys(backEndEnemies).length < Math.min(this.currentLevel, 20)
+    ) {
       this.createNewEnemy()
     }
 

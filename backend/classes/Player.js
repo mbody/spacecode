@@ -103,7 +103,10 @@ class Player extends GameObject {
   }
 
   canShoot() {
-    return this.alive && Date.now() - this.lastShootTimestamp > SHOOT_INTERVAL
+    return (
+      this.alive &&
+      Date.now() - this.lastShootTimestamp > SHOOT_INTERVAL - this.score * 2
+    )
   }
 
   shoot() {

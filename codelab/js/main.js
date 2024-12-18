@@ -212,6 +212,8 @@ var demoWorkspace = Blockly.inject(blocklyDiv, {
   media: './node_modules/blockly/media/',
   theme: Blockly.Themes.Spacecode,
   toolbox: toolbox,
+  horizontalLayout: true,
+  toolboxPosition: 'start',
   renderer: 'zelos',
   zoom: {
     controls: true,
